@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %} Bookmark {% endblock %}
+
+{% block content %}
+<br><br><br>
+
+    <form action = "" method = "post">
+        {% csrf_token %}
+        <p>
+            <label for="id_site_name">Site name:</label> <input type="text" class="form-control" name="site_name" value="장고 개인 프로젝트" maxlength="500" required id="id_site_name">
+        </p>
+
+        <p>
+            <label for="id_url">Site URL:</label> <input type="url" class="form-control" name="url" value="https://wayhome25.github.io/django/2017/03/01/django-99-my-first-project-2/" maxlength="200" required id="id_url">
+        </p>
+        <input type = "submit" value="Update" class = "btn btn-info brn-sm">
+    </form>
+{% endblock %}

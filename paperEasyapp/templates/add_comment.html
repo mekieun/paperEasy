@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<br>
+<h2>add comment</h2>
+<br>
+<form action="add/{{pk}}" method="POST" class="post-form">
+    {% csrf_token %}
+    <label>comment</label>
+    <textarea name="body" class="form-control" id="exampleFormControlTextarea1" rows="6"></textarea>
+    <br>
+    <button type="submit" class="btn btn-secondary">Add</button>
+</form>
+
+<hr>
+
+{% endblock %}

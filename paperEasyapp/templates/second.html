@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<style type="text/css">
+header {
+    width: 1020px;
+    height:50px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -23px;
+    background:#08C;
+
+    }
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+.solid {
+    border:1px solid;
+    padding:10px;
+    height:180px;
+    width:1200px;
+    #text-align:center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -50px;
+
+    }
+
+
+body {
+	background-image: url('https://www.publicdomainpictures.net/pictures/280000/velka/teal-background-color-retro.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+</style>
+<br></br>
+
+    {% if totalLen %}
+
+        <h2 style="text-align:center;">
+            '{{userTextInput}}'에 대한 검색결과는 다음과 같습니다.
+        </h2>
+
+        <br></br>
+
+        {% for pubid, titles, au_infos_final in zipped_list %}
+            <div class="solid">
+
+                <form name="number" action="third" method=GET>
+                    <input type="hidden" name="theid" value="{{pubid}}"/>
+                    <h4>{{titles}}</h4>
+                    <h5>{{au_infos_final}}</h5>
+                    <input type="submit" class="searchbutton" value='e-pubreader'>
+                </form>
+            {% if user.is_authenticated %}
+                <form action="add" method=GET>
+                    <input type="hidden" name="theid" value="{{pubid}}"/>
+                    <input type="submit" value='add post to this'>
+                </form>
+            {% endif %}
+
+            <form action="find" method=GET>
+                    <input type="hidden" name="theid" value="{{pubid}}"/>
+                    <input type="submit" value='posts referencing this'>
+            </form>
+
+            </div><br><br><br>
+        {% endfor %}
+
+
+    {% else %}
+
+        <h2 style="text-align:center;">
+            '{{userTextInput}}'에 대한 검색결과가 없습니다.
+        </h2>
+
+    {% endif %}
+{% endblock %}
+
+
+

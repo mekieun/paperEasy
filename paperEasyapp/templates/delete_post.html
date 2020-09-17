@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<br>
+{% if user.is_authenticated %}
+    {% if user.id == post.author.id %}
+    <h3>Delete: {{ post.title }}</h3>
+
+
+    <form method="POST">
+        {% csrf_token %}
+        <strong>Are you sure you want to delete?</strong>
+        <button type="submit" class="btn btn-secondary">Delete</button>
+    </form>
+
+    {% else %}
+    <strong>Wrong Access</strong>
+    {% endif %}
+{% endif %}
+
+{% endblock %}
