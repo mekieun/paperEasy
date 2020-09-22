@@ -32,7 +32,7 @@ def second(request):
 
 
 def linktogo(lala):
-    crawlinglink = requests.get('https://www.ncbi.nlm.nih.gov/pmc/?term=' + lala)  # n-s
+    crawlinglink = requests.get('https://www.ncbi.nlm.nih.gov/pmc/?term=' + lala, verify=False)  # n-s
     raw = crawlinglink.text
     html = BeautifulSoup(raw, 'html.parser')
 
@@ -85,7 +85,7 @@ class PostDetailView(DetailView):
 
 def add(request):
     data = request.GET['theid']
-    crawlinglink = requests.get('https://www.ncbi.nlm.nih.gov/pmc/?term=' + data)
+    crawlinglink = requests.get('https://www.ncbi.nlm.nih.gov/pmc/?term=' + data, verify=False)
     raw = crawlinglink.text
     html = BeautifulSoup(raw, 'html.parser')
     thetitle = html.select('div.title a')
