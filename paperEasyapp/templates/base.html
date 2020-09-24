@@ -12,7 +12,7 @@
 
     <title>
       {% block title %}
-        PaperEasy
+        BioEasy
       {% endblock %}
     </title>
   </head>
@@ -20,7 +20,7 @@
 
     <!-- 맨 위의 바(navbar) -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="{% url 'home' %}">PaperEasy</a>
+      <a class="navbar-brand" href="{% url 'home' %}">BioEasy</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -30,7 +30,7 @@
 
 
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'post_list' %}">Posts</a>
+              <a class="nav-link" href="{% url 'post_list' %}">Questions</a>
             </li>
 
           {% if user.is_authenticated %}
