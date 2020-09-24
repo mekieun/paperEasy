@@ -56,13 +56,13 @@ body {
             {% if user.is_authenticated %}
                 <form action="add" method=GET>
                     <input type="hidden" name="theid" value="{{pubid}}"/>
-                    <input type="submit" value='add post to this'>
+                    <input type="submit" value='add question'>
                 </form>
             {% endif %}
 
             <form action="find" method=GET>
                     <input type="hidden" name="theid" value="{{pubid}}"/>
-                    <input type="submit" value='posts referencing this'>
+                    <input type="submit" value='questions on this'>
             </form>
 
             </div><br><br><br>
