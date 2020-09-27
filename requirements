@@ -2,6 +2,7 @@ django
 requests
 bs4
 matplotlib
+flask
 nltk
 pandas
 networkx
