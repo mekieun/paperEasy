@@ -106,7 +106,7 @@ def third(request):
     #csv_to_graph(id_num=str(data[3:]), want_to_search='cells')
     #image_path = "static/image_file_" + str(data[3:]) + ".png"
     # 요부분은 html에서 입력받아서 고칠 수 있도록 하기
-    return render(request, 'third.html', {'link_toReader': readerLink, 'pmcID': data, 'image_path': image_path})
+    return render(request, 'third.html', {'link_toReader': readerLink, 'pmcID': data})
 
 
 class PostListView(ListView):
