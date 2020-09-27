@@ -30,6 +30,8 @@ from matplotlib import pyplot as plt_final
 
 # %matplotlib inline
 
+from django.http import HttpResponse
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 nltk.download('punkt')
 
@@ -107,6 +109,11 @@ def third(request):
     image_path = "static/image_file_" + str(data[3:]) + ".png"
     # 요부분은 html에서 입력받아서 고칠 수 있도록 하기
     return render(request, 'third.html', {'link_toReader': readerLink, 'pmcID': data, 'image_path': image_path})
+
+
+@xframe_options_exempt
+def ok_to_load_in_a_frame(request):
+    return HttpResponse("This page is safe to load in a frame on any site.")
 
 
 class PostListView(ListView):
@@ -210,7 +217,7 @@ def only_main(content):
 
 def creating_CSV(num):
     headers = {'User-Agent': 'yumi'}
-    url = 'https://www.ncbi.nlm.nih.gov/pmc/articles/'+str(num)+'/'
+    url = 'https://www.ncbi.nlm.nih.gov/pmc/articles/' + str(num) + '/'
     req = requests.get(url, headers=headers)
 
     raw = req.text
