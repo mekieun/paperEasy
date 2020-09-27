@@ -1,37 +1,8 @@
 import re
 from datetime import datetime
-import matplotlib
 import requests
 from bs4 import BeautifulSoup
 from flask import Flask
-import requests
-from bs4 import BeautifulSoup
-import nltk
-from nltk.tokenize import sent_tokenize
-import csv
-import pandas as pd
-import pandas
-
-import bs4
-import requests
-import spacy
-from spacy import displacy
-import en_core_web_sm
-
-nlp = en_core_web_sm.load()
-from spacy.matcher import Matcher
-from spacy.tokens import Span
-import networkx as nx
-import matplotlib.pyplot as plt
-from tqdm import tqdm
-
-pd.set_option('display.max_colwidth', 200)
-from matplotlib import pyplot as plt_final
-
-# %matplotlib inline
-
-
-nltk.download('punkt')
 
 app = Flask(__name__)
 
@@ -56,6 +27,7 @@ def second(request):
 
     request.encoding = 'utf-8'
     userTextInput = request.GET['userTextInput']
+    print('엄마야' + userTextInput)
     linktogo(userTextInput)
     totalLen = len(titles)
     zipped_list = zip(pubid, titles, au_infos_final)
@@ -102,8 +74,7 @@ def remove_tag(content):
 def third(request):
     data = request.GET['theid']
     readerLink = 'https://www.ncbi.nlm.nih.gov/pmc/articles/' + str(data) + '/?report=reader'
-
-    return render(request, 'third.html', {'link_toReader': readerLink, 'pmcID': data})
+    return render(request, 'third.html', {'link_toReader': readerLink})
 
 
 class PostListView(ListView):
@@ -148,7 +119,7 @@ def createcomment(request, pk):
         comment.date_added = datetime.now()
         comment.save()
         return redirect('post_detail', str(pk))
-    return render(request, 'add_comment.html', {'pk': pk})
+    return render(request, 'add_comment.html', {'pk':pk})
 
 
 def update(request, pk):
@@ -177,11 +148,3 @@ def find(request):
     data = request.GET['theid']
     posts = Post.objects.all().filter(base_id=data)
     return render(request, 'find_post.html', {'posts': posts})
-
-
-def remove_tag(content):
-    cleanr = re.compile('<.*?>')
-    cleantext = re.sub(cleanr, '', content)
-    return cleantext
-
-
