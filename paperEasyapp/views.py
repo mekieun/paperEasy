@@ -1,7 +1,40 @@
 import re
 from datetime import datetime
+import matplotlib
 import requests
 from bs4 import BeautifulSoup
+from flask import Flask
+import requests
+from bs4 import BeautifulSoup
+import nltk
+from nltk.tokenize import sent_tokenize
+import csv
+import pandas as pd
+import pandas
+
+import bs4
+import requests
+import spacy
+from spacy import displacy
+import en_core_web_sm
+
+nlp = en_core_web_sm.load()
+from spacy.matcher import Matcher
+from spacy.tokens import Span
+import networkx as nx
+import matplotlib.pyplot as plt
+from tqdm import tqdm
+
+pd.set_option('display.max_colwidth', 200)
+from matplotlib import pyplot as plt_final
+
+# %matplotlib inline
+
+
+nltk.download('punkt')
+
+app = Flask(__name__)
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
 from .models import Post, Comment
@@ -23,7 +56,6 @@ def second(request):
 
     request.encoding = 'utf-8'
     userTextInput = request.GET['userTextInput']
-    print('엄마야' + userTextInput)
     linktogo(userTextInput)
     totalLen = len(titles)
     zipped_list = zip(pubid, titles, au_infos_final)
@@ -32,7 +64,7 @@ def second(request):
 
 
 def linktogo(lala):
-    crawlinglink = requests.get('https://www.ncbi.nlm.nih.gov/pmc/?term=' + lala, verify=False)  # n-s
+    crawlinglink = requests.get('https://www.ncbi.nlm.nih.gov/pmc/?term=' + lala)  # n-s
     raw = crawlinglink.text
     html = BeautifulSoup(raw, 'html.parser')
 
@@ -70,7 +102,11 @@ def remove_tag(content):
 def third(request):
     data = request.GET['theid']
     readerLink = 'https://www.ncbi.nlm.nih.gov/pmc/articles/' + str(data) + '/?report=reader'
-    return render(request, 'third.html', {'link_toReader': readerLink})
+    creating_CSV(data)
+    csv_to_graph(id_num=str(data[3:]), want_to_search='cells')
+    image_path = "static/image_file_" + str(data[3:]) + ".png"
+    # 요부분은 html에서 입력받아서 고칠 수 있도록 하기
+    return render(request, 'third.html', {'link_toReader': readerLink, 'pmcID': data, 'image_path': image_path})
 
 
 class PostListView(ListView):
@@ -85,7 +121,7 @@ class PostDetailView(DetailView):
 
 def add(request):
     data = request.GET['theid']
-    crawlinglink = requests.get('https://www.ncbi.nlm.nih.gov/pmc/?term=' + data, verify=False)
+    crawlinglink = requests.get('https://www.ncbi.nlm.nih.gov/pmc/?term=' + data)
     raw = crawlinglink.text
     html = BeautifulSoup(raw, 'html.parser')
     thetitle = html.select('div.title a')
@@ -115,7 +151,7 @@ def createcomment(request, pk):
         comment.date_added = datetime.now()
         comment.save()
         return redirect('post_detail', str(pk))
-    return render(request, 'add_comment.html', {'pk':pk})
+    return render(request, 'add_comment.html', {'pk': pk})
 
 
 def update(request, pk):
@@ -144,3 +180,163 @@ def find(request):
     data = request.GET['theid']
     posts = Post.objects.all().filter(base_id=data)
     return render(request, 'find_post.html', {'posts': posts})
+
+
+def remove_tag(content):
+    cleanr = re.compile('<.*?>')
+    cleantext = re.sub(cleanr, '', content)
+    return cleantext
+
+
+def remove_css(content):
+    cleanr = re.compile('{.*}')
+    cleantext = re.sub(cleanr, '', content)
+    cleanr = re.compile('\n|\t')
+    cleantext = re.sub(cleanr, '', cleantext)
+    return cleantext
+
+
+def only_main(content):
+    start = content.find('Abstract')
+    cleantext = content[start:]
+    final = cleantext.find('Article information[\S]+')
+    # print('information',final)
+    cleantext = cleantext[:final]
+    final = cleantext.find('References')
+    # print('reference는',final)
+    cleantext = cleantext[:final]
+    return cleantext
+
+
+def creating_CSV(num):
+    headers = {'User-Agent': 'yumi'}
+    url = 'https://www.ncbi.nlm.nih.gov/pmc/articles/'+str(num)+'/'
+    req = requests.get(url, headers=headers)
+
+    raw = req.text
+
+    html = BeautifulSoup(raw, 'html.parser')
+
+    e_pubreader_html = html.get_text()
+    final_full_text = only_main(remove_css(remove_tag(e_pubreader_html)))
+    id = int(num[3:])  # PMC 아이디 값 넣기
+    sentList = sent_tokenize(final_full_text)
+
+    f = open('write{}.csv'.format(id), 'w', -1, 'utf-8', newline='')
+    wr = csv.writer(f)
+    wr.writerow(['sentence'])
+    for i in sentList:
+        wr.writerow([i])
+
+    f.close()
+
+
+def get_entities(sent):
+    ## chunk 1
+    ent1 = ""
+    ent2 = ""
+
+    prv_tok_dep = ""  # dependency tag of previous token in the sentence
+    prv_tok_text = ""  # previous token in the sentence
+
+    prefix = ""
+    modifier = ""
+
+    #############################################################
+
+    for tok in nlp(sent):
+        ## chunk 2
+        # if token is a punctuation mark then move on to the next token
+        if tok.dep_ != "punct":
+            # check: token is a compound word or not
+            if tok.dep_ == "compound":
+                prefix = tok.text
+                # if the previous word was also a 'compound' then add the current word to it
+                if prv_tok_dep == "compound":
+                    prefix = prv_tok_text + " " + tok.text
+
+            # check: token is a modifier or not
+            if tok.dep_.endswith("mod") == True:
+                modifier = tok.text
+                # if the previous word was also a 'compound' then add the current word to it
+                if prv_tok_dep == "compound":
+                    modifier = prv_tok_text + " " + tok.text
+
+            ## chunk 3
+            if tok.dep_.find("subj") == True:
+                ent1 = modifier + " " + prefix + " " + tok.text
+                prefix = ""
+                modifier = ""
+                prv_tok_dep = ""
+                prv_tok_text = ""
+
+                ## chunk 4
+            if tok.dep_.find("obj") == True:
+                ent2 = modifier + " " + prefix + " " + tok.text
+
+            ## chunk 5
+            # update variables
+            prv_tok_dep = tok.dep_
+            prv_tok_text = tok.text
+    #############################################################
+
+    return [ent1.strip(), ent2.strip()]
+
+
+def get_relation(sent):
+    doc = nlp(sent)
+
+    # Matcher class object
+    matcher = Matcher(nlp.vocab)
+
+    # define the pattern
+    pattern = [{'DEP': 'ROOT'},
+               {'DEP': 'prep', 'OP': "?"},
+               {'DEP': 'agent', 'OP': "?"},
+               {'POS': 'ADJ', 'OP': "?"}]
+
+    matcher.add("matching_1", None, pattern)
+
+    matches = matcher(doc)
+    k = len(matches) - 1
+
+    span = doc[matches[k][1]:matches[k][2]]
+
+    return (span.text)
+
+
+def csv_to_graph(id_num, want_to_search):
+    candidate_sentences = pd.read_csv("write{}.csv".format(id_num))
+    # 여기도 id 값받아서 넣기
+    candidate_sentences.shape
+    # want_to_search='third 에서 유저인풋 받아서 여기 넣기'
+    entity_pairs = []
+
+    for i in tqdm(candidate_sentences['sentence']):
+        entity_pairs.append(get_entities(i))
+
+    relations = [get_relation(i) for i in tqdm(candidate_sentences['sentence'])]
+    pd.Series(relations).value_counts()[:50]
+
+    # extract subject
+    source = [i[0] for i in entity_pairs]
+
+    # extract object
+    target = [i[1] for i in entity_pairs]
+
+    kg_df = pd.DataFrame({'source': source, 'target': target, 'edge': relations})
+
+    # create a directed-graph from a dataframe
+    G = nx.from_pandas_edgelist(kg_df, "source", "target",
+                                edge_attr=True, create_using=nx.MultiDiGraph())
+
+    G = nx.from_pandas_edgelist(kg_df[kg_df['source'] == want_to_search], "edge", "target",
+                                edge_attr=True, create_using=nx.MultiDiGraph())
+
+    plt.figure(figsize=(12, 12))
+    pos = nx.spring_layout(G, k=0.5)  # k regulates the distance between nodes
+    nx.draw(G, with_labels=True, node_color='orange', node_size=1500, edge_cmap=plt.cm.Blues, pos=pos)
+
+    # plt.show()
+
+    plt_final.savefig("static/image_file_{}".format(id_num))
