@@ -6,12 +6,21 @@
 <body>
 	<iframe src={{link_toReader}} style="width:49%; height:700px"></iframe>
 
-	<? include "post_list.html"?>
+	<div id="header"></div>
 
 	<img src={{image_path}} alt={{image_path}}>
 	{{pmcID}}
 
 </body>
 
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+      $(document).ready(function(){
+         $("#header").load("post_list.html")
+        /* id 지정을 통해서도 가능합니다.
+         $("#header").load("header.html #navbar")
+         */
+      });
+</script>
 
 </html>
