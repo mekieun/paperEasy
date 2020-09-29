@@ -2,7 +2,7 @@
 {% block content %}
 
 <br>
-<h2>Post</h2>
+<h2>Check Other Users' Questions...</h2>
 <hr>
 {% for post in object_list %}
     <a href="{% url 'post_detail' post.pk %}">{{post.title}}</a>
