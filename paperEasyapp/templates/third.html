@@ -11,7 +11,7 @@
 	<img src={{image_path}} alt={{image_path}}>
 	{{pmcID}}
 	<br>
-	<h3>Check Other Users Questions...</h3>
+	<h3>Check Other Users' Questions...</h3>
 	<br>
 	{% for post in posts %}
 		<a href="{% url 'post_detail' post.pk %}">{{post.title}}</a>
