@@ -1,26 +1,38 @@
 <head>
 	<meta charset="UTF-8">
 	<title>HTML Iframs</title>
+		<!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
 
 <body>
 
-
-	<div id="header"></div>
-
+	<iframe src={{link_toReader}} style="width:49%; height:700px"></iframe>
 	<img src={{image_path}} alt={{image_path}}>
 	{{pmcID}}
+	<br>
+	<h3>Check Other Users Questions...</h3>
+	<br>
+	{% for post in posts %}
+		<a href="{% url 'post_detail' post.pk %}">{{post.title}}</a>
+		<small>
+			<br>{{post.publish}} | {{post.author}}
+			<br>
+		</small><hr>
+	{% endfor %}
+	<br>
+	{% if user.is_authenticated %}
+		<h3>Add Myself A Question...</h3>
+		<form action="add" method=GET>
+			<input type="hidden" name="theid" value="{{pmcID}}"/>
+			<input class="btn btn-success" type="submit" value='add one'/>
+		</form>
+	{% endif %}
 
+
+
+	<br>
 </body>
 
-<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-<script type="text/javascript">
-      $(document).ready(function(){
-         $("#header").load("post_list.html")
-        /* id 지정을 통해서도 가능합니다.
-         $("#header").load("header.html #navbar")
-         */
-      });
-</script>
 
 </html>

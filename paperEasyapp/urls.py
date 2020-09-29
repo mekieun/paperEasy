@@ -13,7 +13,6 @@ urlpatterns = [
     path('add/create', views.create, name='create'),
     path('post/edit/<int:pk>', views.update, name='update_post'),
     path('post/<int:pk>/delete', views.delete, name='delete_post'),
-    path('find/', views.find),
     path('createcomment/<int:pk>', views.createcomment, name='create_comment'),
     path('createcomment/add/<int:pk>', views.createcomment),
 ]

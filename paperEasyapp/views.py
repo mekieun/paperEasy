@@ -104,11 +104,13 @@ def remove_tag(content):
 def third(request):
     data = request.GET['theid']
     readerLink = 'https://www.ncbi.nlm.nih.gov/pmc/articles/' + str(data) + '/?report=reader'
+    posts = Post.objects.all().filter(base_id=data)
     creating_CSV(data)
     csv_to_graph(id_num=str(data[3:]), want_to_search='cells')
     image_path = "static/image_file_" + str(data[3:]) + ".png"
     # 요부분은 html에서 입력받아서 고칠 수 있도록 하기
-    return render(request, 'third.html', {'link_toReader': readerLink, 'pmcID': data, 'image_path': image_path})
+    return render(request, 'third.html',
+                  {'link_toReader': readerLink, 'pmcID': data, 'image_path': image_path, 'posts': posts})
 
 
 @xframe_options_exempt
@@ -183,10 +185,6 @@ def delete(request, pk):
     return render(request, 'delete_post.html', {'post': post})
 
 
-def find(request):
-    data = request.GET['theid']
-    posts = Post.objects.all().filter(base_id=data)
-    return render(request, 'find_post.html', {'posts': posts})
 
 
 def remove_tag(content):

@@ -53,17 +53,7 @@ body {
                     <h5>{{au_infos_final}}</h5>
                     <input type="submit" class="searchbutton" value='e-pubreader'>
                 </form>
-            {% if user.is_authenticated %}
-                <form action="add" method=GET>
-                    <input type="hidden" name="theid" value="{{pubid}}"/>
-                    <input type="submit" value='add question'>
-                </form>
-            {% endif %}
 
-            <form action="find" method=GET>
-                    <input type="hidden" name="theid" value="{{pubid}}"/>
-                    <input type="submit" value='questions on this'>
-            </form>
 
             </div><br><br><br>
         {% endfor %}
