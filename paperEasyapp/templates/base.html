@@ -2,7 +2,12 @@
 
 <!doctype html>
 <html lang="en">
+  <style>
+      @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
+
+  </style>
   <head>
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,15 +17,15 @@
 
     <title>
       {% block title %}
-        BioEasy
+        PaperEasy
       {% endblock %}
     </title>
   </head>
   <body>
 
     <!-- 맨 위의 바(navbar) -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="{% url 'home' %}">BioEasy</a>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #27eea1; font-family: 'Caveat', cursive;">
+      <a class="navbar-brand" href="{% url 'home' %}" style="font-size: 30px;">BioEasy</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -30,30 +35,30 @@
 
 
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'post_list' %}">Questions</a>
+              <a class="nav-link" href="{% url 'post_list' %}" style="font-size: 20px;">Questions</a>
             </li>
 
           {% if user.is_authenticated %}
           <!-- 사용자가 로그인을 했다면 다음 링크를 띄우게 한다 -->
 
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'list' %}">Bookmark</a>
+              <a class="nav-link" href="{% url 'list' %}" style="font-size: 20px;">Bookmark</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+              <a class="nav-link" href="{% url 'logout' %}" style="font-size: 20px;">Logout</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Hello, {{ user.username }}</a>
+              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true" style="position: relative; margin-top: 4px;">Hello, {{ user.username }}</a>
             </li>
 
           {% else %}
           <!-- 사용자가 로그인을 안했다면 다음 링크를 띄우게 한다 -->
 
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'login' %}">Login</a>
+              <a class="nav-link" href="{% url 'login' %}" style="font-size: 20px;">Login</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'register' %}">Register</a>
+              <a class="nav-link" href="{% url 'register' %}" style="font-size: 20px;">Register</a>
             </li>
 
           {% endif %}

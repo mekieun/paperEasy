@@ -1,16 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<style type="text/css">
+	body{
+	  background-image: linear-gradient(0deg, #08AEEA 0%, #2AF598 100%);
+	  background-repeat: no-repeat;
+	  background-attachment: fixed;
+	}
+</style>
 <head>
 	<meta charset="UTF-8">
 	<title>HTML Iframs</title>
-		<!-- Bootstrap CSS -->
+	<!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
 
 <body>
-	<img src={{image_path}} alt={{image_path}}>
-	<iframe src={{link_toReader}} style="width:49%; height:700px"></iframe>
+	<iframe src={{link_toReader}} style="width:900px; height:500px; postion: relative; margin-left: -50px; border-left: 1px solid;"></iframe>
 	{{pmcID}}
+
+
+	<form action="show_graph" method=GET>
+		<input type="hidden" name="theid" value="{{pmcID}}"/>
+		<button type="submit" class="btn btn-link">See Knowledge graph...</button>
+	</form>
+
+
 	<br>
-	<h3>Check Other Users' Questions...</h3>
+	<h3>Check Other Users Questions...</h3>
 	<br>
 	{% for post in posts %}
 		<a href="{% url 'post_detail' post.pk %}">{{post.title}}</a>
@@ -28,6 +44,13 @@
 		</form>
 	{% endif %}
 
+
+
+	<br>
+</body>
+
+</html>
+{% endblock %}
 
 
 	<br>
