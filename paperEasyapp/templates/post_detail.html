@@ -57,7 +57,10 @@
             <strong style="background-color: rgba( 255, 255, 255, 0.3 ); position: relative; margin-left: 20px;">
                 {{ comment.name }} - {{ comment.date_added }}
             </strong>
-
+             {% if user.id == comment.name.id %}
+                <a href="{% url 'update_comment' comment.pk %}"> (Edit) </a>
+                <a href="{% url 'delete_comment' comment.pk %}"> (Delete) </a>
+            {% endif %}
             <br>
             <div style="position: relative; margin-left: 23px;">
                 {{ comment.body }}

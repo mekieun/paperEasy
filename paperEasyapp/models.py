@@ -27,3 +27,12 @@ class Comment(models.Model):
 
     def __str__(self):
         return '%s - %s' % (self.post.title, self.name)
+
+
+class Memo(models.Model):
+    body = models.TextField()
+    name = models.ForeignKey(User, on_delete=models.CASCADE)
+    pmc_id = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.pmc_id + '|' + str(self.name)
