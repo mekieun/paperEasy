@@ -23,7 +23,7 @@ urlpatterns = [
     path('', include('paperEasyapp.urls')),
     path('users/', include('django.contrib.auth.urls')),
     path('users/', include('users.urls')),
-    path('memo/', include('memo.urls')),
+    path('bookmark/', include('memo.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
