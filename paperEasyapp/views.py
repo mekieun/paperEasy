@@ -114,7 +114,6 @@ def keywordAbstract(request): # knowledge graph 탭 안의 'see knowledge graph'
     data = request.GET['theid']  #data는 third 페이지에서 연 논문의 pmc id 입니다.(ex. pmc3373892)
     creating_CSV(data)             # data를 이용해 csv 파일을 만듭니다.
     keywordList = returning_keyword_list(str(data[3:])) #data에서 숫자부분만 parameter로 넣어서 keywordlist를 만듭니다.
-
     return render(request, 'graph.html', {'keywordList': keywordList, 'pmcID': data})
 
 # keywordAbstract()에서 생성한 keywordList로 버튼을 만드시면 될 듯 합니다.
@@ -127,7 +126,7 @@ def keywordToGraph(request): #키워드 중 하나를 선택하면 실행되어�
     #아래의 want_to_search에 위의 keywordList중 버튼클릭으로 들어온 value를 넣으면 됩니다. (클릭된 버튼의 value는 str타입으로 들어가야 함)
     #아래는 예시로 cells 버튼을 클릭했을 때 입니다.
     csv_to_graph(id_num=str(data[3:]), want_to_search=search) #생성한 csv파일로 그래프를 만듭니다.
-    image_path = "file:///C:/Users/user/Desktop/paperEasy/image_file_{}_{}".format(str(data[3:]), search)+".png" #생성한 이미지 파일을 저장할 경로를 설정합니다.
+    image_path = "/static/image_file_{}".format(str(data[3:])) + ".png"  # 생성한 이미지 파일을 저장할 경로를 설정합니다.
     return render(request, 'show_graph.html', {'image_path': image_path})
 
 
@@ -212,7 +211,7 @@ def csv_to_graph(id_num, want_to_search):
 
     # plt.show()
 
-    plt_final.savefig("C:\\Users\\user\\Desktop\\paperEasy\\image_file_{}_{}".format(id_num, want_to_search))
+    plt_final.savefig("/static/image_file_{}".format(id_num))
 
 
 
