@@ -4,7 +4,7 @@
 
 {% block content %}
 <style type="text/css">
-     @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
     body{
       background-image: linear-gradient(0deg, #08AEEA 0%, #2AF598 100%);
@@ -12,8 +12,19 @@
       background-attachment: fixed;
     }
     .url{
-        style="font-family: 'Caveat', cursive;
+        font-family: 'Caveat', cursive;
+        font-size: 30px;
+    }
+    #site_name{
+        font-family: 'Caveat', cursive;
         font-size: 20px;
+    }
+    #update_button{
+        border-radius: 4px solid;
+        box-shadow:3px 3px 6px #000808;
+        position: fixed;
+        left: 1130px;
+        top: 430px;
     }
 </style>
 <br><br><br>
@@ -21,12 +32,12 @@
     <form action = "" method = "post">
         {% csrf_token %}
         <p>
-            <label for="id_site_name" >Site name:</label> <input type="text" class="form-control" name="site_name" value="장고 개인 프로젝트" maxlength="500" required id="id_site_name">
+            <label for="id_site_name" style="font-family: 'Caveat', cursive; font-size: 30px;" >Site name:</label> <input type="text" id='site_name' class="form-control" name="site_name"  maxlength="500" required id="id_site_name">
         </p>
 
         <p class="url">
-            <label for="id_url" >Site URL:</label> <input type="url" class="form-control" name="url" value="https://wayhome25.github.io/django/2017/03/01/django-99-my-first-project-2/" maxlength="200" required id="id_url">
+            <label for="id_url" >Site URL:</label> <input type="url" class="form-control" name="url" maxlength="200" required id="id_url">
         </p>
-        <input type = "submit" value="Update" class = "btn btn-info brn-sm">
+        <input type = "submit" value="Update" id='update_button' class = "btn btn-info brn-sm">
     </form>
 {% endblock %}

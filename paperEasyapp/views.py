@@ -38,7 +38,7 @@ app = Flask(__name__)
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
-from .models import Post, Comment, Memo
+from .models import Post, Comment, Memo, Image
 from operator import itemgetter
 
 global reader
@@ -110,23 +110,12 @@ def third(request):
     return render(request, 'third.html', {'link_toReader': readerLink, 'pmcID': data, 'posts': posts, 'memos': memos})
 
 
-def keywordAbstract(request): # knowledge graph 탭 안의 'see knowledge graph' 텍스트가 클릭되면 실행되어야 할 부분입니다.
-    data = request.GET['theid']  #data는 third 페이지에서 연 논문의 pmc id 입니다.(ex. pmc3373892)
-    creating_CSV(data)             # data를 이용해 csv 파일을 만듭니다.
-    keywordList = returning_keyword_list(str(data[3:])) #data에서 숫자부분만 parameter로 넣어서 keywordlist를 만듭니다.
-    return render(request, 'graph.html', {'keywordList': keywordList, 'pmcID': data})
-
-# keywordAbstract()에서 생성한 keywordList로 버튼을 만드시면 될 듯 합니다.
-# 그 다음, 키워드 버튼이 하나라도 클릭되면 아래의 keywordToGraph()를 실행하게 하면 됩니다.
-
-
 def keywordToGraph(request): #키워드 중 하나를 선택하면 실행되어야 할 부분입니다
     data = request.GET['theid']
-    search = request.GET['keyword']
     #아래의 want_to_search에 위의 keywordList중 버튼클릭으로 들어온 value를 넣으면 됩니다. (클릭된 버튼의 value는 str타입으로 들어가야 함)
     #아래는 예시로 cells 버튼을 클릭했을 때 입니다.
-    csv_to_graph(id_num=str(data[3:]), want_to_search=search) #생성한 csv파일로 그래프를 만듭니다.
-    image_path = "/static/image_file_{}".format(str(data[3:])) + ".png"  # 생성한 이미지 파일을 저장할 경로를 설정합니다.
+    csv_to_graph(id_num=str(data[3:])) #생성한 csv파일로 그래프를 만듭니다.
+    image_path = "image_file_{}".format(str(data[3:]))+".png" #생성한 이미지 파일을 저장할 경로를 설정합니다.
     return render(request, 'show_graph.html', {'image_path': image_path})
 
 
@@ -134,85 +123,60 @@ def creating_CSV(num): #pmcID를 통해 ncbi 사이트에서 크롤링해옵니�
     headers = {'User-Agent': 'yumi'}
     url = 'https://www.ncbi.nlm.nih.gov/pmc/articles/' + str(num) + '/'
     req = requests.get(url, headers=headers)
-
     raw = req.text
-
     html = BeautifulSoup(raw, 'html.parser')
-
     e_pubreader_html = html.get_text()
     final_full_text = only_main(remove_css(remove_tag(e_pubreader_html)))
     id = int(num[3:])  # PMC 아이디 값 넣기
     sentList = sent_tokenize(final_full_text)
-
     f = open('write{}.csv'.format(id), 'w', -1, 'utf-8', newline='')  #크롤링해온 논문은 write+pmcID(숫자)+.csv 로 paperEasy 폴더에 저장됩니다.
     wr = csv.writer(f)
     wr.writerow(['sentence'])
     for i in sentList:
         wr.writerow([i])
-
     f.close()
 
 
 def returning_keyword_list(id_num):
     candidate_sentences = pd.read_csv("write{}.csv".format(id_num))
-
     candidate_sentences.shape
-
     entity_pairs = []
-
     for i in tqdm(candidate_sentences['sentence']):
         entity_pairs.append(get_entities(i))
-
     relations = [get_relation(i) for i in tqdm(candidate_sentences['sentence'])]
     finalList=[]
     testlist = pd.Series(relations).value_counts().keys().tolist()
     for i in testlist:
         if (pd.Series(relations).value_counts()[i]>=5):  #빈도수 5이상 키워드만으로 리스트 구성
             finalList.append(i)
-
     testposlist = nltk.pos_tag(finalList)
     testFinalList = [word for word, pos in testposlist if pos in ['NNP', 'NNS','NNPS']]  #명사형 키워드들만 뽑기
     finalKeywordlist = testFinalList[:int(len(testFinalList)*1)] #빈도가 1이어도 그래프가 코랩에서 나오길래(?) 빈도수 상위 50%로 대략 구성하였습니다.
-
     return finalKeywordlist
 
 
 
-def csv_to_graph(id_num, want_to_search):
+def csv_to_graph(id_num):
     candidate_sentences = pd.read_csv("write{}.csv".format(id_num))
-
     candidate_sentences.shape
-
     entity_pairs = []
-
     for i in tqdm(candidate_sentences['sentence']):
         entity_pairs.append(get_entities(i))
-
     relations = [get_relation(i) for i in tqdm(candidate_sentences['sentence'])]
-
     # extract subject
     source = [i[0] for i in entity_pairs]
-
     # extract object
     target = [i[1] for i in entity_pairs]
-
     kg_df = pd.DataFrame({'source': source, 'target': target, 'edge': relations})
-
     # create a directed-graph from a dataframe
     G = nx.from_pandas_edgelist(kg_df, "source", "target",
                                 edge_attr=True, create_using=nx.MultiDiGraph())
-
-    G = nx.from_pandas_edgelist(kg_df[kg_df['source'] == want_to_search], "edge", "target",
-                                edge_attr=True, create_using=nx.MultiDiGraph())
-
-    plt.figure(figsize=(12, 12))
+    plt.figure(figsize=(60, 50))
     pos = nx.spring_layout(G, k=0.5)  # k regulates the distance between nodes
-    nx.draw(G, with_labels=True, node_color='orange', node_size=1500, edge_cmap=plt.cm.Blues, pos=pos)
-
+    nx.draw(G, with_labels=True, node_color='orange', font_size='28', node_size=10000, node_shape='d',
+            edge_cmap=plt.cm.Blues, pos=pos)
     # plt.show()
-
-    plt_final.savefig("/static/image_file_{}".format(id_num))
-
+    plt_final.savefig("static/img/image_file_{}".format(id_num))
 
 
 class PostListView(ListView):
@@ -238,6 +202,18 @@ def add(request):
 def add_memo(request):
     return render(request, 'add_memo.html')
 
+
+def create_memo(request):
+    if request.method == 'POST':
+        memo = Memo()
+        memo.body = request.POST['body']
+        memo.name = request.user
+        memo.pmc_id = request.POST['pmc_id']
+        memo.save()
+        message = 'created successful'
+        return HttpResponse(message)
+
+
 def create(request):
     if request.method == 'POST':
         post = Post()
@@ -262,16 +238,6 @@ def createcomment(request, pk):
         return redirect('post_detail', str(pk))
     return render(request, 'add_comment.html', {'pk': pk})
 
-
-def create_memo(request):
-    if request.method == 'POST':
-        memo = Memo()
-        memo.body = request.POST['body']
-        memo.name = request.user
-        memo.pmc_id = request.POST['pmc_id']
-        memo.save()
-        message = 'created successful'
-        return HttpResponse(message)
 
 
 

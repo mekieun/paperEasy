@@ -25,7 +25,7 @@
 </head>
 <body>
          <br>
-        <div class="post_title">
+        <div class="post_title" style="box-shadow:4px 4px 8px #000808;">
             <h2>{{ post.title }}</h2>
         </div>
 
@@ -45,11 +45,13 @@
             {{ post.body }}
         <hr>
     <div class="comment" >
-        <h3 style="background-color: rgba( 255, 255, 255, 0.3 );">Comments..</h3>
+        <h3 style="background-color: rgba( 255, 255, 255, 0.3 ); box-shadow:4px 4px 8px #000808;">Comments..</h3>
         {% if not post.comments.all %}
             No Comments yet...
             {% if user.is_authenticated %}
-                <a href="{% url 'create_comment' post.pk %}">Add one</a>
+                <br>
+        <br>
+                <a href="{% url 'create_comment' post.pk %}" style="box-shadow:4px 4px 8px #000808;  background-color: #A2C9D9;">&nbspAdd one&nbsp</a>
             {% endif %}
 
         {% else %}
@@ -69,7 +71,9 @@
             {% endfor %}
 
         {% if user.is_authenticated %}
-            <br><a href="{% url 'create_comment' post.pk %}">Add Comment</a><br>
+            <br>
+
+            <a href="{% url 'create_comment' post.pk %}" style="box-shadow:4px 4px 8px #000808;  background-color: #A2C9D9; ">&nbspAdd Comment&nbsp</a><br>
         {% endif %}
         <hr>
 

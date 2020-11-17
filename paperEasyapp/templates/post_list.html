@@ -14,16 +14,20 @@
 </head>
 <body>
     <br>
-    <h2 style="font-family: 'Caveat', cursive; font-size: 40px; background-color: rgba( 255, 255, 255, 0.3 ); text-align: center;">Post</h2>
+    <h2 style="font-family: 'Caveat', cursive; font-size: 42px; background-color: rgba( 255, 255, 255, 0.3 ); box-shadow:4px 4px 8px #000808; text-align: center;">community</h2>
     <hr>
+
     {% for post in object_list %}
-        <a href="{% url 'post_detail' post.pk %}" style="font-family: 'Work Sans', sans-serif; font-size: 20px;">{{post.title}}</a>
+
+        <a href="{% url 'post_detail' post.pk %}" style="font-family: 'Work Sans', sans-serif; font-size: 22px;">{{post.title}}</a>
         <small style="font-family: 'Work Sans', sans-serif; font-size: 12px;">
             <br>{{post.publish}} | {{post.author}}
             <br>Reference {{post.base_title}}
             <br>
-        </small><hr>
+        </small>
+    <hr>
     {% endfor %}
+
 </body>
 
 {% endblock %}

@@ -23,6 +23,5 @@ urlpatterns = [
     path('createcomment/delete/<int:pk>', views.deletecomment, name='delete_comment'),
     path('createcomment/edit/<int:pk>', views.updatecomment, name='update_comment'),
 
-    path('keywordAbstract/', views.keywordAbstract, name='keywordAbstract'),
-    path('keywordAbstract/keywordToGraph/', views.keywordToGraph),
+    path('keywordToGraph/', views.keywordToGraph),
 ]

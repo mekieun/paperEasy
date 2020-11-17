@@ -1,0 +1,8 @@
+django
+requests
+bs4
+matplotlib
+nltk
+pandas
+networkx
+spacy

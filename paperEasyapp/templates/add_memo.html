@@ -1,5 +1,22 @@
 <html>
 <head>
+	<style type="text/css">
+		#send_form{
+			position: fixed;
+			border-radius: 3px;
+			background-color: #A2C9D9;
+			top: 150px;
+			left: 280px;
+			box-shadow:10px 10px 30px #000808;
+
+		}
+		#exampleFormControlTextarea1{
+			width: 320px;
+			position: fixed;
+			margin-left:40px;
+			top:10px;
+		}
+	</style>
 <meta charset="UTF-8">
 <title>HTML Iframs</title>
 <!-- Bootstrap CSS -->
@@ -65,7 +82,7 @@
 		<input type="hidden" name="pmc_id" id="pmc_id" class="form-control form-control-sm" type="text"/>
 		<textarea name="body" class="form-control" id="exampleFormControlTextarea1" rows="5"></textarea>
 		<br>
-		<button type="submit" onclick="getParentText()" id="send_form" class="btn btn-secondary">Add</button>
+		<button type="submit" onclick="getParentText()" id="send_form" class="btn btn-secondary">Add memo</button>
 	</form>
 <hr>
 </body>

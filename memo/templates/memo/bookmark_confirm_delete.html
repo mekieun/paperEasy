@@ -11,12 +11,29 @@
       background-repeat: no-repeat;
       background-attachment: fixed;
     }
+    #text{
+        font-family: 'Caveat', cursive;
+        font-size: 20px;
+        box-shadow:3px 3px 6px #000808;
+        background-color: #CA7B8C;
+        color: black;
+    }
+    #delete_button{
+        font-family: 'Caveat', cursive;
+        font-size: 20px;
+        box-shadow:3px 3px 6px #000808;
+        background-color: #7BB3CA;
+        color: black;
+        position:fixed;
+        left: 1130px;
+        top: 230px;
+    }
 </style>
 <br><br><br>
     <form action = "" method = "post">
             {% csrf_token %}
-            <div class="alert alert-danger">Do you want to delete "{{object}}"?</div>
-            <input type = "submit" value="Delete" class = "btn btn-info btn-sm">
+            <div id='text' class="alert alert-danger">Do you want to delete &nbsp "{{object}}"?</div>
+            <input type = "submit" id="delete_button" value="Delete" class = "btn btn-info btn-sm">
     </form>
 
 {% endblock %}
