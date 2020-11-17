@@ -110,14 +110,6 @@ def third(request):
     return render(request, 'third.html', {'link_toReader': readerLink, 'pmcID': data, 'posts': posts, 'memos': memos})
 
 
-def keywordToGraph(request): #키워드 중 하나를 선택하면 실행되어야 할 부분입니다
-    data = request.GET['theid']
-    #아래의 want_to_search에 위의 keywordList중 버튼클릭으로 들어온 value를 넣으면 됩니다. (클릭된 버튼의 value는 str타입으로 들어가야 함)
-    #아래는 예시로 cells 버튼을 클릭했을 때 입니다.
-    csv_to_graph(id_num=str(data[3:])) #생성한 csv파일로 그래프를 만듭니다.
-    image_path = "image_file_{}".format(str(data[3:]))+".png" #생성한 이미지 파일을 저장할 경로를 설정합니다.
-    return render(request, 'show_graph.html', {'image_path': image_path})
-
 
 def creating_CSV(num): #pmcID를 통해 ncbi 사이트에서 크롤링해옵니다.
     headers = {'User-Agent': 'yumi'}
